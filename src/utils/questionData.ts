@@ -7,7 +7,86 @@ export interface Question {
     text: string;
     value: number;
   }[];
+  type?: 'radio' | 'text' | 'select';
 }
+
+export interface BasicInfo {
+  id: string;
+  text: string;
+  description?: string;
+  type: 'number' | 'radio' | 'select' | 'text';
+  options?: {
+    text: string;
+    value: string;
+  }[];
+  required?: boolean;
+}
+
+export const basicInfoQuestions: BasicInfo[] = [
+  {
+    id: "age",
+    text: "What is your child's age (in months)?",
+    type: "number",
+    required: true
+  },
+  {
+    id: "sex",
+    text: "What is your child's sex?",
+    type: "radio",
+    options: [
+      { text: "Male", value: "male" },
+      { text: "Female", value: "female" }
+    ],
+    required: true
+  },
+  {
+    id: "ethnicity",
+    text: "What is your child's ethnicity?",
+    type: "select",
+    options: [
+      { text: "Asian", value: "asian" },
+      { text: "African", value: "african" },
+      { text: "Caucasian", value: "caucasian" },
+      { text: "Hispanic", value: "hispanic" },
+      { text: "Middle Eastern", value: "middle_eastern" },
+      { text: "Other", value: "other" }
+    ],
+    required: true
+  },
+  {
+    id: "jaundice",
+    text: "Was your child born with jaundice?",
+    type: "radio",
+    options: [
+      { text: "Yes", value: "yes" },
+      { text: "No", value: "no" }
+    ],
+    required: true
+  },
+  {
+    id: "family_asd",
+    text: "Does your child have an immediate family member with Autism Spectrum Disorder (ASD)?",
+    type: "radio",
+    options: [
+      { text: "Yes", value: "yes" },
+      { text: "No", value: "no" }
+    ],
+    required: true
+  },
+  {
+    id: "respondent",
+    text: "Who is completing this screening test?",
+    type: "select",
+    options: [
+      { text: "Parent", value: "parent" },
+      { text: "Caregiver", value: "caregiver" },
+      { text: "Medical Staff", value: "medical_staff" },
+      { text: "Clinician", value: "clinician" },
+      { text: "Other", value: "other" }
+    ],
+    required: true
+  }
+];
 
 export const questions: Question[] = [
   {
@@ -15,9 +94,8 @@ export const questions: Question[] = [
     text: "Does your child look at you when you call his/her name?",
     description: "Observe how your child responds when you call their name.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes, but inconsistently", value: 0.5 },
-      { text: "Often or always", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
@@ -25,19 +103,17 @@ export const questions: Question[] = [
     text: "How easy is it for you to get eye contact with your child?",
     description: "Consider how readily your child makes eye contact during interactions.",
     options: [
-      { text: "Very difficult", value: 1 },
-      { text: "Somewhat difficult", value: 0.5 },
-      { text: "Easy, no difficulty", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
     id: 3,
-    text: "Does your child point to indicate that s/he wants something?",
+    text: "Does your child point to indicate that they want something?",
     description: "For example, pointing at a toy that is out of reach.",
     options: [
-      { text: "Rarely or never points", value: 1 },
-      { text: "Sometimes points", value: 0.5 },
-      { text: "Regularly points to indicate wants", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
@@ -45,19 +121,17 @@ export const questions: Question[] = [
     text: "Does your child point to share interest with you?",
     description: "For example, pointing at an interesting sight or object to direct your attention to it.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes", value: 0.5 },
-      { text: "Often or always", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
     id: 5,
-    text: "Does your child pretend?",
+    text: "Does your child pretend play?",
     description: "For example, caring for dolls or talking on a toy phone.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes, limited pretend play", value: 0.5 },
-      { text: "Regularly engages in pretend play", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
@@ -65,29 +139,26 @@ export const questions: Question[] = [
     text: "Does your child follow where you're looking?",
     description: "Notice if your child follows your gaze or looks where you are looking.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes", value: 0.5 },
-      { text: "Often or always", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
     id: 7,
-    text: "If you or someone else in the family is visibly upset, does your child show signs of wanting to comfort them?",
+    text: "If someone in the family is visibly upset, does your child show signs of wanting to comfort them?",
     description: "For example, stroking hair, hugging them, or showing concern.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes", value: 0.5 },
-      { text: "Often shows comforting behavior", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
     id: 8,
-    text: "Would you describe your child's first words as:",
-    description: "Consider the quality and context of your child's early language.",
+    text: "Would you describe your child's first words as delayed?",
+    description: "Consider the timing and quality of your child's early language development.",
     options: [
-      { text: "Unusual or absent", value: 1 },
-      { text: "Somewhat typical", value: 0.5 },
-      { text: "Completely typical", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
@@ -95,9 +166,8 @@ export const questions: Question[] = [
     text: "Does your child use simple gestures?",
     description: "For example, waving goodbye or nodding yes.",
     options: [
-      { text: "Rarely or never", value: 1 },
-      { text: "Sometimes", value: 0.5 },
-      { text: "Regularly uses gestures", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
   {
@@ -105,9 +175,8 @@ export const questions: Question[] = [
     text: "Does your child stare at nothing with no apparent purpose?",
     description: "Notice if your child appears to fixate on empty space or stares without focus.",
     options: [
-      { text: "Often", value: 1 },
-      { text: "Sometimes", value: 0.5 },
-      { text: "Rarely or never", value: 0 },
+      { text: "Yes", value: 1 },
+      { text: "No", value: 0 },
     ],
   },
 ];

@@ -10,9 +10,17 @@ import { calculateResults, Result } from '@/utils/resultCalculator';
 
 type AppSection = 'welcome' | 'questionnaire' | 'results' | 'treatment';
 
+interface ScreeningData {
+  answers: number[];
+  basicInfo: Record<string, any>;
+}
+
 const Index = () => {
   const [currentSection, setCurrentSection] = useState<AppSection>('welcome');
-  const [answers, setAnswers] = useState<number[]>([]);
+  const [screeningData, setScreeningData] = useState<ScreeningData>({
+    answers: [],
+    basicInfo: {}
+  });
   const [result, setResult] = useState<Result | null>(null);
   
   const handleStartQuestionnaire = () => {
@@ -25,18 +33,29 @@ const Index = () => {
     setCurrentSection('welcome');
   };
   
-  const handleQuestionnaireCompleted = (answers: number[]) => {
-    setAnswers(answers);
+  const handleQuestionnaireCompleted = (answers: number[], basicInfo: Record<string, any>) => {
+    setScreeningData({ answers, basicInfo });
     const results = calculateResults(answers);
     setResult(results);
     setCurrentSection('results');
+    
+    // For debugging/development - log the complete screening data that could be sent to a backend ML model
+    console.log('Complete screening data:', {
+      answers,
+      basicInfo,
+      results
+    });
+    
     // Scroll to top when showing results
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
   const handleRestartQuestionnaire = () => {
     setCurrentSection('welcome');
-    setAnswers([]);
+    setScreeningData({
+      answers: [],
+      basicInfo: {}
+    });
     setResult(null);
     // Scroll to top when restarting
     window.scrollTo({ top: 0, behavior: 'smooth' });

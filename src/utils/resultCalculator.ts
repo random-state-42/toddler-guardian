@@ -9,12 +9,15 @@ export interface Result {
 
 export const calculateResults = (answers: number[]): Result => {
   // Calculate total score (the sum of all answers)
+  // In the Q-Chat-10-Toddler, the scoring is simpler:
+  // 0 = less concern (No), 1 = more concern (Yes)
   const score = answers.reduce((acc, current) => acc + current, 0);
   
   // Maximum possible score
   const maxScore = 10; // 10 questions, max 1 point each
   
   // Determine risk level based on score
+  // According to Q-Chat-10-Toddler: ≤3 suggests low risk, >3 suggests higher risk
   let riskLevel: 'low' | 'medium' | 'high';
   let interpretation: string;
   let recommendations: string[];
