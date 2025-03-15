@@ -12,25 +12,25 @@ export const calculateResults = (answers: number[]): Result => {
   const score = answers.reduce((acc, current) => acc + current, 0);
   
   // Maximum possible score
-  const maxScore = 20; // 10 questions, max 2 points each
+  const maxScore = 10; // 10 questions, max 1 point each
   
   // Determine risk level based on score
   let riskLevel: 'low' | 'medium' | 'high';
   let interpretation: string;
   let recommendations: string[];
   
-  if (score <= 5) {
+  if (score <= 3) {
     riskLevel = 'low';
-    interpretation = "Based on your responses, your child currently shows few behavioral indicators that are commonly associated with autism spectrum disorder. This suggests a low risk level.";
+    interpretation = "Based on your responses using the Q-chat-10-Toddler screening tool, your child currently shows few behavioral indicators that are commonly associated with autism spectrum disorder. This suggests a low risk level.";
     recommendations = [
       "Continue monitoring your child's development",
       "Engage in interactive play and communication activities",
       "Discuss any new concerns with your pediatrician at regular check-ups",
       "Consider a follow-up screening in 6-12 months"
     ];
-  } else if (score <= 12) {
+  } else if (score <= 6) {
     riskLevel = 'medium';
-    interpretation = "Your child's responses indicate some behavioral patterns that are sometimes associated with autism spectrum disorder. This suggests a medium risk level that warrants attention.";
+    interpretation = "Your child's responses on the Q-chat-10-Toddler screening tool indicate some behavioral patterns that may be associated with autism spectrum disorder. This suggests a medium risk level that warrants attention.";
     recommendations = [
       "Schedule an evaluation with a developmental pediatrician",
       "Consider a comprehensive assessment by a multidisciplinary team",
@@ -40,7 +40,7 @@ export const calculateResults = (answers: number[]): Result => {
     ];
   } else {
     riskLevel = 'high';
-    interpretation = "Your responses indicate several behavioral patterns that are commonly associated with autism spectrum disorder. This suggests a higher risk level that requires prompt professional attention.";
+    interpretation = "Your responses on the Q-chat-10-Toddler screening tool indicate several behavioral patterns that are commonly associated with autism spectrum disorder. This suggests a higher risk level that requires prompt professional attention.";
     recommendations = [
       "Seek immediate evaluation with a developmental specialist",
       "Contact your local early intervention program for an assessment",
