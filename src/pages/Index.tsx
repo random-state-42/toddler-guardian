@@ -7,12 +7,21 @@ import QuestionnaireSection from '@/components/QuestionnaireSection';
 import ResultsSection from '@/components/ResultsSection';
 import TreatmentSection from '@/components/TreatmentSection';
 import { calculateResults, Result } from '@/utils/resultCalculator';
+import { sendScreeningData } from '@/utils/apiService';
+import { useToast } from '@/hooks/use-toast';
 
 type AppSection = 'welcome' | 'questionnaire' | 'results' | 'treatment';
 
 interface ScreeningData {
   answers: number[];
   basicInfo: Record<string, any>;
+}
+
+interface ModelPrediction {
+  prediction: string;
+  risk_questions: string[];
+  score: number;
+  risk_level: string;
 }
 
 const Index = () => {
@@ -22,6 +31,9 @@ const Index = () => {
     basicInfo: {}
   });
   const [result, setResult] = useState<Result | null>(null);
+  const [modelPrediction, setModelPrediction] = useState<ModelPrediction | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
   
   const handleStartQuestionnaire = () => {
     setCurrentSection('questionnaire');
@@ -33,21 +45,46 @@ const Index = () => {
     setCurrentSection('welcome');
   };
   
-  const handleQuestionnaireCompleted = (answers: number[], basicInfo: Record<string, any>) => {
+  const handleQuestionnaireCompleted = async (answers: number[], basicInfo: Record<string, any>) => {
     setScreeningData({ answers, basicInfo });
-    const results = calculateResults(answers);
-    setResult(results);
-    setCurrentSection('results');
+    setIsLoading(true);
     
-    // For debugging/development - log the complete screening data that could be sent to a backend ML model
-    console.log('Complete screening data:', {
-      answers,
-      basicInfo,
-      results
-    });
-    
-    // Scroll to top when showing results
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    try {
+      // First, calculate results using the frontend logic
+      const frontendResults = calculateResults(answers);
+      setResult(frontendResults);
+      
+      // Then attempt to get a prediction from the ML model
+      const prediction = await sendScreeningData(answers, basicInfo);
+      setModelPrediction(prediction);
+      
+      console.log('Model prediction:', prediction);
+      
+      // Log the complete screening data with both frontend and backend results
+      console.log('Complete screening data:', {
+        answers,
+        basicInfo,
+        frontendResults,
+        modelPrediction: prediction
+      });
+      
+      setCurrentSection('results');
+      
+    } catch (error) {
+      console.error('Failed to get prediction from ML model:', error);
+      toast({
+        title: "Unable to connect to prediction service",
+        description: "Using built-in screening algorithm instead.",
+        variant: "destructive"
+      });
+      
+      // Still show results using the frontend calculation
+      setCurrentSection('results');
+    } finally {
+      setIsLoading(false);
+      // Scroll to top when showing results
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
   
   const handleRestartQuestionnaire = () => {
@@ -57,6 +94,7 @@ const Index = () => {
       basicInfo: {}
     });
     setResult(null);
+    setModelPrediction(null);
     // Scroll to top when restarting
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -85,13 +123,15 @@ const Index = () => {
         {currentSection === 'questionnaire' && (
           <QuestionnaireSection 
             onComplete={handleQuestionnaireCompleted} 
-            onBack={handleQuestionnaireBacked} 
+            onBack={handleQuestionnaireBacked}
+            isLoading={isLoading}
           />
         )}
         
         {currentSection === 'results' && result && (
           <ResultsSection 
-            result={result} 
+            result={result}
+            modelPrediction={modelPrediction}
             onRestart={handleRestartQuestionnaire} 
             onTreatment={handleShowTreatment} 
           />
@@ -99,7 +139,7 @@ const Index = () => {
         
         {currentSection === 'treatment' && result && (
           <TreatmentSection 
-            riskLevel={result.riskLevel} 
+            riskLevel={modelPrediction?.risk_level?.toLowerCase() || result.riskLevel} 
             onBack={handleBackToResults} 
           />
         )}

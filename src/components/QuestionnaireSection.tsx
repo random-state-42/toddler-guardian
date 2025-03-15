@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -12,11 +11,12 @@ import { usePageTransition } from '../utils/animations';
 interface QuestionnaireSectionProps {
   onComplete: (answers: number[], basicInfo: Record<string, any>) => void;
   onBack: () => void;
+  isLoading?: boolean;
 }
 
 type QuestionnaireStep = 'basic-info' | 'screening';
 
-const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps) => {
+const QuestionnaireSection = ({ onComplete, onBack, isLoading = false }: QuestionnaireSectionProps) => {
   const [currentStep, setCurrentStep] = useState<QuestionnaireStep>('basic-info');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<number[]>(Array(questions.length).fill(-1));
@@ -27,7 +27,6 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
   
   const currentQuestion = questions[currentQuestionIndex];
   
-  // When the question changes, load the previous answer if it exists
   useEffect(() => {
     if (currentStep === 'screening') {
       setCurrentAnswer(answers[currentQuestionIndex]);
@@ -46,7 +45,6 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
   };
   
   const handleStartScreening = () => {
-    // Check if all required basic info is provided
     const isBasicInfoComplete = basicInfoQuestions.every(q => 
       !q.required || (basicInfo[q.id] !== undefined && basicInfo[q.id] !== '')
     );
@@ -58,26 +56,22 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
         setAnimating(false);
       }, 350);
     } else {
-      // Here you would typically show an error message
       alert("Please complete all required fields before proceeding.");
     }
   };
   
   const handleNext = () => {
-    // Update answers array with current selection
     const newAnswers = [...answers];
     newAnswers[currentQuestionIndex] = currentAnswer;
     setAnswers(newAnswers);
     
     if (currentQuestionIndex < questions.length - 1) {
-      // Move to next question with animation
       setAnimating(true);
       setTimeout(() => {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setAnimating(false);
       }, 350);
     } else {
-      // Questionnaire completed
       onComplete(newAnswers, basicInfo);
     }
   };
@@ -85,19 +79,16 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
   const handlePrevious = () => {
     if (currentStep === 'screening') {
       if (currentQuestionIndex > 0) {
-        // Update answers array with current selection
         const newAnswers = [...answers];
         newAnswers[currentQuestionIndex] = currentAnswer;
         setAnswers(newAnswers);
         
-        // Move to previous question with animation
         setAnimating(true);
         setTimeout(() => {
           setCurrentQuestionIndex(currentQuestionIndex - 1);
           setAnimating(false);
         }, 350);
       } else {
-        // Go back to basic info section
         setAnimating(true);
         setTimeout(() => {
           setCurrentStep('basic-info');
@@ -105,12 +96,10 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
         }, 350);
       }
     } else {
-      // Go back to welcome screen
       onBack();
     }
   };
   
-  // Render basic information section
   const renderBasicInfoSection = () => {
     return (
       <div className={`transition-all duration-350 ${animating ? 'opacity-0 transform translate-y-8' : 'opacity-100 transform translate-y-0'}`}>
@@ -223,7 +212,6 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
     );
   };
   
-  // Render screening questions section
   const renderScreeningSection = () => {
     return (
       <>
@@ -276,16 +264,19 @@ const QuestionnaireSection = ({ onComplete, onBack }: QuestionnaireSectionProps)
               onClick={handlePrevious}
               variant="outline"
               className="border-blue-primary text-blue-primary hover:bg-blue-light"
+              disabled={isLoading}
             >
               {currentQuestionIndex === 0 ? 'Back to Basic Info' : 'Previous Question'}
             </Button>
             
             <Button 
               onClick={handleNext}
-              disabled={currentAnswer === -1}
+              disabled={currentAnswer === -1 || isLoading}
               className="bg-blue-primary hover:bg-blue-dark text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250"
             >
-              {currentQuestionIndex === questions.length - 1 ? 'Submit & See Results' : 'Next Question'}
+              {currentQuestionIndex === questions.length - 1 ? 
+                (isLoading ? 'Processing...' : 'Submit & See Results') : 
+                'Next Question'}
             </Button>
           </div>
         </div>
