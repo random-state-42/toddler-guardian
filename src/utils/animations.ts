@@ -14,7 +14,7 @@ export function usePageTransition() {
   }, []);
   
   return {
-    pageTransitionClass: `transition-all duration-450 ease-in-out-expo transform ${
+    pageTransitionClass: `transition-all duration-450 transform ${
       isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
     }`,
     isVisible

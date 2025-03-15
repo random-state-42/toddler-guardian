@@ -60,7 +60,8 @@
   }
   
   .section-transition {
-    @apply transition-all duration-450 ease-in-out-expo;
+    @apply transition-all duration-450;
+    transition-timing-function: cubic-bezier(0.87, 0, 0.13, 1);
   }
   
   .question-transition {
