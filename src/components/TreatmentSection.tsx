@@ -13,7 +13,13 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
   const { pageTransitionClass } = usePageTransition();
   const { sectionTransitionClass } = useSectionTransition(100);
   
-  const treatmentOptions = getTreatmentOptions(riskLevel);
+  // Normalize the risk level to make sure it's one of the expected values
+  const normalizedRiskLevel = (['low', 'medium', 'high'].includes(riskLevel as string) 
+    ? riskLevel 
+    : (riskLevel?.toLowerCase() === 'high' ? 'high' : 
+       riskLevel?.toLowerCase() === 'medium' ? 'medium' : 'low')) as 'low' | 'medium' | 'high';
+  
+  const treatmentOptions = getTreatmentOptions(normalizedRiskLevel);
   const { isItemVisible } = useStaggeredEntrance(treatmentOptions, 100);
   
   return (

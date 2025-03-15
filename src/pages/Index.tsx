@@ -111,6 +111,15 @@ const Index = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   
+  // Helper function to convert risk level to expected format
+  const normalizeRiskLevel = (level: string): 'low' | 'medium' | 'high' => {
+    const lowerLevel = level.toLowerCase();
+    if (lowerLevel === 'low') return 'low';
+    if (lowerLevel === 'medium') return 'medium'; 
+    if (lowerLevel === 'high') return 'high';
+    return 'low'; // Default to low if unknown
+  };
+  
   return (
     <div className="min-h-screen flex flex-col bg-neutral-100">
       <Header />
@@ -139,7 +148,7 @@ const Index = () => {
         
         {currentSection === 'treatment' && result && (
           <TreatmentSection 
-            riskLevel={modelPrediction?.risk_level?.toLowerCase() || result.riskLevel} 
+            riskLevel={normalizeRiskLevel(modelPrediction?.risk_level || result.riskLevel)} 
             onBack={handleBackToResults} 
           />
         )}

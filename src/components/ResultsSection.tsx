@@ -4,13 +4,21 @@ import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition } from '../utils/animations';
 import { Result } from '../utils/resultCalculator';
 
+interface ModelPrediction {
+  prediction: string;
+  risk_questions: string[];
+  score: number;
+  risk_level: string;
+}
+
 interface ResultsSectionProps {
   result: Result;
+  modelPrediction: ModelPrediction | null;
   onRestart: () => void;
   onTreatment: () => void;
 }
 
-const ResultsSection = ({ result, onRestart, onTreatment }: ResultsSectionProps) => {
+const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: ResultsSectionProps) => {
   const { pageTransitionClass } = usePageTransition();
   const { sectionTransitionClass: section1Class } = useSectionTransition(200);
   const { sectionTransitionClass: section2Class } = useSectionTransition(400);
