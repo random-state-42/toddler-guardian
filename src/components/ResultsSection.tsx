@@ -6,6 +6,7 @@ import { Result } from '../utils/resultCalculator';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { questions } from '../utils/questionData';
+import { ShieldCheck } from 'lucide-react';
 
 interface ModelPrediction {
   prediction: string;
@@ -168,6 +169,23 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
             </div>
           </div>
         </div>
+        
+        {result.riskLevel === 'low' && (
+          <div className="p-6 sm:p-8 border-b border-neutral-200 bg-risk-low/10">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 rounded-full bg-risk-low flex items-center justify-center">
+                <ShieldCheck className="w-7 h-7 text-green-800" />
+              </div>
+              <div>
+                <h4 className="text-lg font-medium text-green-800 mb-1">Your Child Appears to be Safe</h4>
+                <p className="text-green-700">
+                  A low-risk result suggests that your child's behavior is typical for their age, and no immediate action is needed. 
+                  Continue to monitor their development as they grow.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div className="p-6 sm:p-8 border-b border-neutral-200">
           <h4 className="text-lg font-medium text-neutral-900 mb-3">Interpretation</h4>
