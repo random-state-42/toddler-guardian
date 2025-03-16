@@ -14,23 +14,37 @@ export const sendScreeningData = async (
 ): Promise<PredictionResponse> => {
   try {
     // In the form, user selects "Yes" (1) or "No" (0)
-    // In the Q-CHAT-10, "No" answers generally indicate higher risk (except for Q8 and Q10)
-    // The backend expects a consistent format where 1 always indicates a concerning answer
+    // The backend expects 1 for concerning answers and 0 for non-concerning answers
+    
+    // For Q-CHAT-10, questions 1-7 and 9, "No" (0) is concerning
+    // For questions 8 and 10, "Yes" (1) is concerning
+    
+    // We need to map the answers to the format expected by the backend
+    const mappedAnswers = [...answers];
+    
+    // For questions 1-7 and 9, we need to invert the answers (0→1, 1→0)
+    // because in our UI, 1 is "Yes" and 0 is "No", but for these questions,
+    // "No" answers indicate risk
+    [0, 1, 2, 3, 4, 5, 6, 8].forEach(index => {
+      // Invert answers for questions 1-7 and 9
+      mappedAnswers[index] = answers[index] === 1 ? 0 : 1;
+    });
+    
+    // No inversion needed for questions 8 and 10 (indices 7 and 9)
+    // as "Yes" answers already indicate risk
     
     // Format the data as expected by the backend
     const formattedData = {
-      // For questions 1-7 and 9, "No" (0) is concerning, so we send as-is
-      // For questions 8 and 10, "Yes" (1) is concerning, so no inversion needed
-      A1: answers[0],
-      A2: answers[1],
-      A3: answers[2],
-      A4: answers[3],
-      A5: answers[4],
-      A6: answers[5],
-      A7: answers[6],
-      A8: answers[7],
-      A9: answers[8],
-      A10: answers[9],
+      A1: mappedAnswers[0],
+      A2: mappedAnswers[1],
+      A3: mappedAnswers[2],
+      A4: mappedAnswers[3],
+      A5: mappedAnswers[4],
+      A6: mappedAnswers[5],
+      A7: mappedAnswers[6],
+      A8: mappedAnswers[7],
+      A9: mappedAnswers[8],
+      A10: mappedAnswers[9],
       
       // Map demographic information
       Age_Mons: parseInt(basicInfo.age, 10),
@@ -42,6 +56,8 @@ export const sendScreeningData = async (
     };
 
     console.log("Sending data to backend:", formattedData);
+    console.log("Original answers:", answers);
+    console.log("Mapped answers for backend:", mappedAnswers);
     
     // Send data to backend API
     const response = await axios.post('http://localhost:5000/predict', formattedData);

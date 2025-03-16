@@ -5,107 +5,80 @@ export interface Result {
   riskLevel: 'low' | 'medium' | 'high';
   interpretation: string;
   recommendations: string[];
+  answerArray: number[]; // Add the original answer array
 }
 
 export const calculateResults = (answers: number[]): Result => {
-  // Calculate total score (the sum of all answers)
-  // In the Q-Chat-10-Toddler, the scoring is simpler:
-  // 0 = less concern (No), 1 = more concern (Yes)
-  const score = answers.reduce((acc, current) => acc + current, 0);
+  // Count the score according to the scoring system
+  let score = 0;
   
-  // Maximum possible score
-  const maxScore = 10; // 10 questions, max 1 point each
+  // For questions 1-7 and 9, "No" answers (0) are concerning
+  // For questions 8 and 10, "Yes" answers (1) are concerning
+  
+  // Calculate score for questions 1-7 and 9
+  [0, 1, 2, 3, 4, 5, 6, 8].forEach(index => {
+    if (answers[index] === 0) score += 1; // "No" answer scores a point
+  });
+  
+  // Calculate score for questions 8 and 10
+  [7, 9].forEach(index => {
+    if (answers[index] === 1) score += 1; // "Yes" answer scores a point
+  });
   
   // Determine risk level based on score
-  // According to Q-Chat-10-Toddler: ≤3 suggests low risk, >3 suggests higher risk
+  // Q-CHAT-10 thresholds: Low Risk (0-3), Medium Risk (4-7), High Risk (8-10)
   let riskLevel: 'low' | 'medium' | 'high';
-  let interpretation: string;
-  let recommendations: string[];
-  
   if (score <= 3) {
     riskLevel = 'low';
-    interpretation = "Based on your responses using the Q-chat-10-Toddler screening tool, your child currently shows few behavioral indicators that are commonly associated with autism spectrum disorder. This suggests a low risk level.";
-    recommendations = [
-      "Continue monitoring your child's development",
-      "Engage in interactive play and communication activities",
-      "Discuss any new concerns with your pediatrician at regular check-ups",
-      "Consider a follow-up screening in 6-12 months"
-    ];
-  } else if (score <= 6) {
+  } else if (score <= 7) {
     riskLevel = 'medium';
-    interpretation = "Your child's responses on the Q-chat-10-Toddler screening tool indicate some behavioral patterns that may be associated with autism spectrum disorder. This suggests a medium risk level that warrants attention.";
-    recommendations = [
-      "Schedule an evaluation with a developmental pediatrician",
-      "Consider a comprehensive assessment by a multidisciplinary team",
-      "Look into early intervention services in your area",
-      "Focus on engagement and communication in daily activities",
-      "Join parent support groups for additional resources"
-    ];
   } else {
     riskLevel = 'high';
-    interpretation = "Your responses on the Q-chat-10-Toddler screening tool indicate several behavioral patterns that are commonly associated with autism spectrum disorder. This suggests a higher risk level that requires prompt professional attention.";
-    recommendations = [
-      "Seek immediate evaluation with a developmental specialist",
-      "Contact your local early intervention program for an assessment",
-      "Request referrals to autism specialists (developmental pediatrician, child psychologist)",
-      "Begin researching evidence-based intervention approaches",
-      "Connect with autism support organizations for guidance and resources",
-      "Remember that early intervention can significantly improve outcomes"
-    ];
+  }
+  
+  // Generate interpretation and recommendations based on risk level
+  let interpretation = '';
+  let recommendations: string[] = [];
+  
+  switch (riskLevel) {
+    case 'low':
+      interpretation = `Your child scored ${score} out of 10, which indicates a low risk for autism spectrum disorder. This suggests typical development for their age.`;
+      recommendations = [
+        "Continue monitoring your child's development.",
+        "Follow standard well-child visit schedules with your pediatrician.",
+        "Engage in regular interactive play and communication activities with your child.",
+        "If you notice any developmental concerns in the future, revisit this screening tool."
+      ];
+      break;
+    
+    case 'medium':
+      interpretation = `Your child scored ${score} out of 10, which suggests a moderate risk for autism spectrum disorder. This indicates some behaviors that may require further assessment.`;
+      recommendations = [
+        "Schedule an appointment with your child's pediatrician to discuss these results.",
+        "Consider a referral to a developmental pediatrician or child psychologist for further evaluation.",
+        "Continue to engage in activities that promote social interaction and communication.",
+        "Document any specific behaviors you notice that may be concerning."
+      ];
+      break;
+    
+    case 'high':
+      interpretation = `Your child scored ${score} out of 10, which indicates a higher risk for autism spectrum disorder. This suggests the presence of several behaviors commonly associated with ASD.`;
+      recommendations = [
+        "Promptly schedule an evaluation with a developmental pediatrician, child neurologist, or child psychologist specializing in autism.",
+        "Contact your local early intervention program for an assessment (available for children under 3 years).",
+        "Consider autism-specific screening or diagnostic assessments such as the ADOS-2 or ADI-R.",
+        "Join a parent support group to connect with other families navigating similar situations.",
+        "Begin researching early intervention approaches and therapies."
+      ];
+      break;
   }
   
   return {
     score,
-    maxScore,
+    maxScore: 10,
     riskLevel,
     interpretation,
-    recommendations
+    recommendations,
+    answerArray: answers // Include the original answers array
   };
-};
-
-export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): any[] => {
-  const commonTreatments = [
-    {
-      title: "Applied Behavior Analysis (ABA)",
-      description: "A therapy based on learning and behavior principles that focuses on improving specific behaviors such as communication, social skills, learning, and adaptive behaviors.",
-      suitable: ['medium', 'high'],
-    },
-    {
-      title: "Speech-Language Therapy",
-      description: "Helps with language development, communication skills, and social interaction. Can be beneficial for children with various communication challenges.",
-      suitable: ['low', 'medium', 'high'],
-    },
-    {
-      title: "Occupational Therapy",
-      description: "Focuses on developing fine motor skills, sensory processing, and daily living skills to increase independence and participation.",
-      suitable: ['medium', 'high'],
-    },
-    {
-      title: "Early Intervention Programs",
-      description: "Specialized programs for children under 3 years that include a range of therapies and support services tailored to developmental needs.",
-      suitable: ['medium', 'high'],
-    },
-    {
-      title: "Social Skills Training",
-      description: "Structured teaching of social interaction skills, understanding social cues, and developing relationships with peers.",
-      suitable: ['low', 'medium', 'high'],
-    },
-    {
-      title: "Parent-Mediated Intervention",
-      description: "Programs that train parents to implement therapeutic practices at home, enhancing learning in natural environments.",
-      suitable: ['low', 'medium', 'high'],
-    },
-    {
-      title: "Developmental, Individual Differences, Relationship-Based Approach (DIR/Floortime)",
-      description: "A relationship-based therapy that focuses on following the child's lead during play to develop social, emotional, and intellectual capacities.",
-      suitable: ['low', 'medium', 'high'],
-    },
-    {
-      title: "Picture Exchange Communication System (PECS)",
-      description: "A visual communication system that helps children communicate by exchanging pictures for items or activities they want.",
-      suitable: ['medium', 'high'],
-    },
-  ];
-  
-  return commonTreatments.filter(treatment => treatment.suitable.includes(riskLevel));
 };

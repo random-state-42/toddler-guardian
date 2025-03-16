@@ -76,22 +76,18 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
     return question ? question.text : `Question ${questionId}`;
   };
   
-  const getUserAnswer = (questionId: string): string => {
+  const getUserAnswer = (questionId: string, answers?: number[]): string => {
+    if (!modelPrediction) return "Unknown answer";
+    
     const questionNumber = parseInt(questionId.replace('A', ''), 10);
-    const question = questions.find(q => q.id === questionNumber);
-    if (!question) return "Unknown answer";
+    const questionIndex = questionNumber - 1; // Convert to 0-based index
     
-    const isInverted = [8, 10].includes(questionNumber);
-    const isRiskQuestion = modelPrediction && modelPrediction.risk_questions.includes(questionId);
-    
-    let displayAnswer;
-    if (isInverted) {
-      displayAnswer = isRiskQuestion ? "Yes" : "No";
-    } else {
-      displayAnswer = isRiskQuestion ? "No" : "Yes";
+    if (answers && answers.length > questionIndex) {
+      const actualAnswer = answers[questionIndex] === 1 ? "Yes" : "No";
+      return `User answered: ${actualAnswer}`;
     }
     
-    return `User answered: ${displayAnswer}`;
+    return "User answer not available";
   };
   
   return (
@@ -144,7 +140,9 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
                       </Badge>
                       <p className="text-red-800">{getQuestionText(questionId)}</p>
                     </div>
-                    <p className="text-sm text-red-700 font-medium ml-10">{getUserAnswer(questionId)}</p>
+                    <p className="text-sm text-red-700 font-medium ml-10">
+                      {getUserAnswer(questionId, result ? result.answerArray : undefined)}
+                    </p>
                   </div>
                 </div>
               ))}
