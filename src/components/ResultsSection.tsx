@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition } from '../utils/animations';
 import { Result } from '../utils/resultCalculator';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import { questions } from '../utils/questionData';
 
 interface ModelPrediction {
   prediction: string;
@@ -59,7 +59,6 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
     high: 'High Risk'
   };
 
-  // Normalize model risk level to match our types
   const normalizeRiskLevel = (level: string): 'low' | 'medium' | 'high' => {
     const lowerLevel = level?.toLowerCase();
     if (lowerLevel === 'low') return 'low';
@@ -69,6 +68,12 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
   };
   
   const modelRiskLevel = modelPrediction ? normalizeRiskLevel(modelPrediction.risk_level) : 'low';
+  
+  const getQuestionText = (questionId: string): string => {
+    const questionNumber = parseInt(questionId.replace('A', ''), 10);
+    const question = questions.find(q => q.id === questionNumber);
+    return question ? question.text : `Question ${questionId}`;
+  };
   
   return (
     <div className={`w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 ${pageTransitionClass}`}>
@@ -110,15 +115,16 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
           
           <div className="p-6 sm:p-8 border-b border-neutral-200">
             <h4 className="text-lg font-medium text-neutral-900 mb-3">Identified Risk Indicators</h4>
-            <div className="flex flex-wrap gap-2">
-              {modelPrediction.risk_questions.map((question, index) => (
-                <Badge 
-                  key={index} 
-                  variant="outline" 
-                  className="bg-risk-high/10 text-red-700 border-red-200"
-                >
-                  Question {question.replace('A', '')}
-                </Badge>
+            <div className="space-y-3">
+              {modelPrediction.risk_questions.map((questionId, index) => (
+                <div key={index} className="p-3 rounded-lg bg-risk-high/10 border border-red-200">
+                  <div className="flex items-start gap-2">
+                    <Badge className="bg-risk-high text-red-800 shrink-0 mt-0.5">
+                      Question {questionId.replace('A', '')}
+                    </Badge>
+                    <p className="text-red-800">{getQuestionText(questionId)}</p>
+                  </div>
+                </div>
               ))}
             </div>
             <Alert className="mt-4 bg-risk-high/10 border-risk-high/30">
