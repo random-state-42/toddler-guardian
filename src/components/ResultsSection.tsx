@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition } from '../utils/animations';
@@ -82,11 +81,17 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
     const question = questions.find(q => q.id === questionNumber);
     if (!question) return "Unknown answer";
     
-    // The index in the answers array is questionNumber - 1
-    // Find the last completed questionnaire data from console logs
-    const answerValue = modelPrediction && modelPrediction.risk_questions.includes(questionId) ? "No" : "Yes";
+    const isInverted = [8, 10].includes(questionNumber);
+    const isRiskQuestion = modelPrediction && modelPrediction.risk_questions.includes(questionId);
     
-    return `User answered: ${answerValue}`;
+    let displayAnswer;
+    if (isInverted) {
+      displayAnswer = isRiskQuestion ? "Yes" : "No";
+    } else {
+      displayAnswer = isRiskQuestion ? "No" : "Yes";
+    }
+    
+    return `User answered: ${displayAnswer}`;
   };
   
   return (
@@ -139,7 +144,7 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
                       </Badge>
                       <p className="text-red-800">{getQuestionText(questionId)}</p>
                     </div>
-                    <p className="text-sm text-red-700 font-medium ml-10">User answered: No</p>
+                    <p className="text-sm text-red-700 font-medium ml-10">{getUserAnswer(questionId)}</p>
                   </div>
                 </div>
               ))}

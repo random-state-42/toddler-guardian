@@ -13,9 +13,14 @@ export const sendScreeningData = async (
   basicInfo: Record<string, any>
 ): Promise<PredictionResponse> => {
   try {
+    // In the form, user selects "Yes" (1) or "No" (0)
+    // In the Q-CHAT-10, "No" answers generally indicate higher risk (except for Q8 and Q10)
+    // The backend expects a consistent format where 1 always indicates a concerning answer
+    
     // Format the data as expected by the backend
     const formattedData = {
-      // Map A1 through A10 questions
+      // For questions 1-7 and 9, "No" (0) is concerning, so we send as-is
+      // For questions 8 and 10, "Yes" (1) is concerning, so no inversion needed
       A1: answers[0],
       A2: answers[1],
       A3: answers[2],
