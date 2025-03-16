@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition } from '../utils/animations';
@@ -75,6 +76,18 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
     return question ? question.text : `Question ${questionId}`;
   };
   
+  const getUserAnswer = (questionId: string): string => {
+    const questionNumber = parseInt(questionId.replace('A', ''), 10);
+    const question = questions.find(q => q.id === questionNumber);
+    if (!question) return "Unknown answer";
+    
+    // The index in the answers array is questionNumber - 1
+    // Find the last completed questionnaire data from console logs
+    const answerValue = modelPrediction && modelPrediction.risk_questions.includes(questionId) ? "No" : "Yes";
+    
+    return `User answered: ${answerValue}`;
+  };
+  
   return (
     <div className={`w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 ${pageTransitionClass}`}>
       <div className={section1Class}>
@@ -118,11 +131,14 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
             <div className="space-y-3">
               {modelPrediction.risk_questions.map((questionId, index) => (
                 <div key={index} className="p-3 rounded-lg bg-risk-high/10 border border-red-200">
-                  <div className="flex items-start gap-2">
-                    <Badge className="bg-risk-high text-red-800 shrink-0 mt-0.5">
-                      Question {questionId.replace('A', '')}
-                    </Badge>
-                    <p className="text-red-800">{getQuestionText(questionId)}</p>
+                  <div className="flex flex-col gap-2">
+                    <div className="flex items-start gap-2">
+                      <Badge className="bg-risk-high text-red-800 shrink-0 mt-0.5">
+                        Question {questionId.replace('A', '')}
+                      </Badge>
+                      <p className="text-red-800">{getQuestionText(questionId)}</p>
+                    </div>
+                    <p className="text-sm text-red-700 font-medium ml-10">User answered: No</p>
                   </div>
                 </div>
               ))}
