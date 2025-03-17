@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition } from '../utils/animations';
@@ -215,7 +216,7 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
       <div className={`flex flex-col sm:flex-row gap-4 justify-center ${section4Class}`}>
         <Button 
           onClick={onTreatment}
-          className="bg-blue-primary hover:bg-blue-dark text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250"
+          className={`${result.riskLevel === 'low' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-primary hover:bg-blue-dark'} text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250`}
           size="lg"
         >
           View Treatment Options
@@ -230,6 +231,12 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
           Restart Screening
         </Button>
       </div>
+      
+      {result.riskLevel === 'low' && (
+        <div className="text-center mt-3 text-green-700 font-medium">
+          Treatment is not required for low-risk results
+        </div>
+      )}
       
       <div className={`mt-8 bg-neutral-100 rounded-2xl p-6 ${section4Class}`}>
         <p className="text-sm text-neutral-800">
