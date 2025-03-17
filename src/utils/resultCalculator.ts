@@ -11,6 +11,7 @@ export interface Result {
 export interface TreatmentOption {
   title: string;
   description: string;
+  resourceLink?: string; // Add optional resource link
 }
 
 export const calculateResults = (answers: number[]): Result => {
@@ -92,11 +93,13 @@ export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): Treat
   const commonOptions: TreatmentOption[] = [
     {
       title: "Parent Education and Training",
-      description: "Learning strategies to support your child's development, communication, and behavior management at home."
+      description: "Learning strategies to support your child's development, communication, and behavior management at home.",
+      resourceLink: "https://www.youtube.com/watch?v=ubflRfUOByI"
     },
     {
       title: "Speech and Language Therapy",
-      description: "Helps develop communication skills, language comprehension, and social use of language."
+      description: "Helps develop communication skills, language comprehension, and social use of language.",
+      resourceLink: "https://www.youtube.com/watch?v=pSGVb60-BSw"
     }
   ];
 
@@ -106,11 +109,13 @@ export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): Treat
         ...commonOptions,
         {
           title: "Developmental Monitoring",
-          description: "Regular check-ups with pediatrician to track developmental milestones and address any concerns early."
+          description: "Regular check-ups with pediatrician to track developmental milestones and address any concerns early.",
+          resourceLink: "https://www.verywellmind.com/signs-of-autism-in-babies-7486843"
         },
         {
           title: "Social Engagement Activities",
-          description: "Playgroups, storytime sessions, and other activities that promote social interaction and engagement."
+          description: "Playgroups, storytime sessions, and other activities that promote social interaction and engagement.",
+          resourceLink: "https://www.autismspeaks.org/science-news/autism-speaks-releases-new-cst-caregiver-quick-tips-videos-support-parents-and"
         }
       ];
     
@@ -119,15 +124,18 @@ export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): Treat
         ...commonOptions,
         {
           title: "Occupational Therapy",
-          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence."
+          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence.",
+          resourceLink: "https://www.youtube.com/channel/UChdlLGmro7NzDgCEF5SoLsQ"
         },
         {
           title: "Play Therapy",
-          description: "Uses play to help children express themselves, develop social skills, and address emotional or behavioral challenges."
+          description: "Uses play to help children express themselves, develop social skills, and address emotional or behavioral challenges.",
+          resourceLink: "https://www.youtube.com/watch?v=i0PPjK0lc9A"
         },
         {
           title: "Developmental Preschool",
-          description: "Structured programs designed to support children with developmental concerns in a supportive educational environment."
+          description: "Structured programs designed to support children with developmental concerns in a supportive educational environment.",
+          resourceLink: "https://www.childrens.com/specialties-services/specialty-centers-and-programs/center-for-autism-care-parent-education-videos"
         }
       ];
     
@@ -136,23 +144,28 @@ export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): Treat
         ...commonOptions,
         {
           title: "Applied Behavior Analysis (ABA)",
-          description: "Evidence-based therapy that focuses on improving specific behaviors such as communication, social skills, learning, and adaptive living skills."
+          description: "Evidence-based therapy that focuses on improving specific behaviors such as communication, social skills, learning, and adaptive living skills.",
+          resourceLink: "https://www.youtube.com/channel/UChdlLGmro7NzDgCEF5SoLsQ"
         },
         {
           title: "Occupational Therapy",
-          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence."
+          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence.",
+          resourceLink: "https://www.youtube.com/channel/UChdlLGmro7NzDgCEF5SoLsQ"
         },
         {
           title: "Social Skills Training",
-          description: "Structured teaching of social interaction, communication, and emotional understanding in individual or group settings."
+          description: "Structured teaching of social interaction, communication, and emotional understanding in individual or group settings.",
+          resourceLink: "https://autismtherapies.com/parent-resources/video"
         },
         {
           title: "Early Intensive Behavioral Intervention",
-          description: "Comprehensive treatment programs for young children, typically involving 25-40 hours of therapy per week."
+          description: "Comprehensive treatment programs for young children, typically involving 25-40 hours of therapy per week.",
+          resourceLink: "https://www.youtube.com/watch?v=L-aohWG5do0"
         },
         {
           title: "Assistive Technology",
-          description: "Communication devices, visual supports, and other tools that can help with communication and learning."
+          description: "Communication devices, visual supports, and other tools that can help with communication and learning.",
+          resourceLink: "https://en.wikipedia.org/wiki/Video_modeling"
         }
       ];
   }

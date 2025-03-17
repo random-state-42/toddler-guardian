@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition, useStaggeredEntrance } from '../utils/animations';
 import { getTreatmentOptions } from '../utils/resultCalculator';
+import { ExternalLink } from 'lucide-react';
 
 interface TreatmentSectionProps {
   riskLevel: 'low' | 'medium' | 'high';
@@ -48,9 +49,20 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
             <h3 className="text-lg font-medium text-neutral-900 mb-2">
               {treatment.title}
             </h3>
-            <p className="text-neutral-600 text-sm leading-relaxed">
+            <p className="text-neutral-600 text-sm leading-relaxed mb-3">
               {treatment.description}
             </p>
+            {treatment.resourceLink && (
+              <a 
+                href={treatment.resourceLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="inline-flex items-center text-sm font-medium text-blue-primary hover:text-blue-dark transition-colors"
+              >
+                <ExternalLink className="w-4 h-4 mr-1" />
+                View Resource
+              </a>
+            )}
           </div>
         ))}
       </div>
