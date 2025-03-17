@@ -8,6 +8,11 @@ export interface Result {
   answerArray: number[]; // Add the original answer array
 }
 
+export interface TreatmentOption {
+  title: string;
+  description: string;
+}
+
 export const calculateResults = (answers: number[]): Result => {
   // Count the score according to the scoring system
   let score = 0;
@@ -81,4 +86,74 @@ export const calculateResults = (answers: number[]): Result => {
     recommendations,
     answerArray: answers // Include the original answers array
   };
+};
+
+export const getTreatmentOptions = (riskLevel: 'low' | 'medium' | 'high'): TreatmentOption[] => {
+  const commonOptions: TreatmentOption[] = [
+    {
+      title: "Parent Education and Training",
+      description: "Learning strategies to support your child's development, communication, and behavior management at home."
+    },
+    {
+      title: "Speech and Language Therapy",
+      description: "Helps develop communication skills, language comprehension, and social use of language."
+    }
+  ];
+
+  switch (riskLevel) {
+    case 'low':
+      return [
+        ...commonOptions,
+        {
+          title: "Developmental Monitoring",
+          description: "Regular check-ups with pediatrician to track developmental milestones and address any concerns early."
+        },
+        {
+          title: "Social Engagement Activities",
+          description: "Playgroups, storytime sessions, and other activities that promote social interaction and engagement."
+        }
+      ];
+    
+    case 'medium':
+      return [
+        ...commonOptions,
+        {
+          title: "Occupational Therapy",
+          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence."
+        },
+        {
+          title: "Play Therapy",
+          description: "Uses play to help children express themselves, develop social skills, and address emotional or behavioral challenges."
+        },
+        {
+          title: "Developmental Preschool",
+          description: "Structured programs designed to support children with developmental concerns in a supportive educational environment."
+        }
+      ];
+    
+    case 'high':
+      return [
+        ...commonOptions,
+        {
+          title: "Applied Behavior Analysis (ABA)",
+          description: "Evidence-based therapy that focuses on improving specific behaviors such as communication, social skills, learning, and adaptive living skills."
+        },
+        {
+          title: "Occupational Therapy",
+          description: "Addresses sensory processing, fine motor skills, and daily living activities to improve function and independence."
+        },
+        {
+          title: "Social Skills Training",
+          description: "Structured teaching of social interaction, communication, and emotional understanding in individual or group settings."
+        },
+        {
+          title: "Early Intensive Behavioral Intervention",
+          description: "Comprehensive treatment programs for young children, typically involving 25-40 hours of therapy per week."
+        },
+        {
+          title: "Assistive Technology",
+          description: "Communication devices, visual supports, and other tools that can help with communication and learning."
+        }
+      ];
+  }
 };
