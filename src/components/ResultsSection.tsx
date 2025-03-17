@@ -216,7 +216,7 @@ const ResultsSection = ({ result, modelPrediction, onRestart, onTreatment }: Res
       <div className={`flex flex-col sm:flex-row gap-4 justify-center ${section4Class}`}>
         <Button 
           onClick={onTreatment}
-          className={`${result.riskLevel === 'low' ? 'bg-green-500 hover:bg-green-600' : 'bg-blue-primary hover:bg-blue-dark'} text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250`}
+          className="bg-blue-primary hover:bg-blue-dark text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250"
           size="lg"
         >
           View Treatment Options
