@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { usePageTransition, useSectionTransition, useStaggeredEntrance } from '../utils/animations';
 import { getTreatmentOptions } from '../utils/resultCalculator';
 import { ExternalLink } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 
 interface TreatmentSectionProps {
   riskLevel: 'low' | 'medium' | 'high';
@@ -13,6 +14,8 @@ interface TreatmentSectionProps {
 const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
   const { pageTransitionClass } = usePageTransition();
   const { sectionTransitionClass } = useSectionTransition(100);
+  const [searchParams] = useSearchParams();
+  const fromHeader = searchParams.get('section') === 'treatment';
   
   // Normalize the risk level to make sure it's one of the expected values
   const normalizedRiskLevel = (['low', 'medium', 'high'].includes(riskLevel as string) 
@@ -28,11 +31,12 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
       <div className={`text-center mb-12 ${sectionTransitionClass}`}>
         <div className="chip bg-blue-light text-blue-dark mb-2">Treatment</div>
         <h2 className="text-3xl font-display font-medium text-neutral-900 mb-6">
-          Potential Treatment Options
+          {fromHeader ? 'Autism Treatment Options' : 'Potential Treatment Options'}
         </h2>
         <p className="text-neutral-600 text-lg max-w-2xl mx-auto">
-          Here are evidence-based approaches that may benefit your child
-          based on the screening results.
+          {fromHeader 
+            ? 'Here are evidence-based approaches that can benefit children with autism spectrum disorder.'
+            : 'Here are evidence-based approaches that may benefit your child based on the screening results.'}
         </p>
       </div>
       
@@ -97,7 +101,7 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
           onClick={onBack}
           className="bg-blue-primary hover:bg-blue-dark text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250"
         >
-          Return to Results
+          {fromHeader ? 'Return to Home' : 'Return to Results'}
         </Button>
       </div>
     </div>

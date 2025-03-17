@@ -1,5 +1,6 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import WelcomeSection from '@/components/WelcomeSection';
@@ -25,6 +26,7 @@ interface ModelPrediction {
 }
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
   const [currentSection, setCurrentSection] = useState<AppSection>('welcome');
   const [screeningData, setScreeningData] = useState<ScreeningData>({
     answers: [],
@@ -34,6 +36,28 @@ const Index = () => {
   const [modelPrediction, setModelPrediction] = useState<ModelPrediction | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  // Check URL parameters on initial load
+  useEffect(() => {
+    const sectionParam = searchParams.get('section');
+    if (sectionParam === 'treatment') {
+      // For the treatments link in the header, we'll show a general treatment overview
+      // with moderate risk level as default when no specific result is available
+      if (!result) {
+        // Create a placeholder result with medium risk
+        const placeholderResult: Result = {
+          score: 5,
+          maxScore: 10,
+          riskLevel: 'medium', 
+          interpretation: 'This is an overview of potential treatment options.',
+          recommendations: [],
+          answerArray: []
+        };
+        setResult(placeholderResult);
+      }
+      setCurrentSection('treatment');
+    }
+  }, [searchParams, result]);
   
   const handleStartQuestionnaire = () => {
     setCurrentSection('questionnaire');
@@ -149,7 +173,7 @@ const Index = () => {
         {currentSection === 'treatment' && result && (
           <TreatmentSection 
             riskLevel={normalizeRiskLevel(modelPrediction?.risk_level || result.riskLevel)} 
-            onBack={handleBackToResults} 
+            onBack={currentSection === 'results' ? handleBackToResults : handleRestartQuestionnaire} 
           />
         )}
       </main>
