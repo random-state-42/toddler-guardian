@@ -23,9 +23,6 @@ const Header = () => {
           <Link to="/?section=treatment" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
             Treatments
           </Link>
-          <a href="#contact" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
-            Contact
-          </a>
         </nav>
       </div>
     </header>
