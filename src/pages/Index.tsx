@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import Header from '@/components/layout/Header';
@@ -172,7 +173,7 @@ const Index = () => {
         {currentSection === 'treatment' && result && (
           <TreatmentSection 
             riskLevel={normalizeRiskLevel(modelPrediction?.risk_level || result.riskLevel)} 
-            onBack={currentSection === 'results' ? handleBackToResults : handleRestartQuestionnaire} 
+            onBack={searchParams.get('section') === 'treatment' ? handleRestartQuestionnaire : handleBackToResults} 
           />
         )}
       </main>
