@@ -1,11 +1,9 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
-import { usePageTransition, useSectionTransition } from '../utils/animations';
 import { getTreatmentOptions } from '../utils/resultCalculator';
 import { ExternalLink } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
-import { Skeleton } from '@/components/ui/skeleton';
 
 interface TreatmentSectionProps {
   riskLevel: 'low' | 'medium' | 'high';
@@ -13,8 +11,6 @@ interface TreatmentSectionProps {
 }
 
 const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
-  const { pageTransitionClass } = usePageTransition();
-  const { sectionTransitionClass } = useSectionTransition(100);
   const [searchParams] = useSearchParams();
   const fromHeader = searchParams.get('section') === 'treatment';
   
@@ -24,12 +20,12 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
     : (riskLevel?.toLowerCase() === 'high' ? 'high' : 
        riskLevel?.toLowerCase() === 'medium' ? 'medium' : 'low')) as 'low' | 'medium' | 'high';
   
-  // Pre-calculate treatment options immediately without staggered animation delay
+  // Pre-calculate treatment options immediately
   const treatmentOptions = getTreatmentOptions(normalizedRiskLevel);
   
   return (
-    <div className={`w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 ${pageTransitionClass}`}>
-      <div className={`text-center mb-12 ${sectionTransitionClass}`}>
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
+      <div className="text-center mb-12">
         <div className="chip bg-blue-light text-blue-dark mb-2">Treatment</div>
         <h2 className="text-3xl font-display font-medium text-neutral-900 mb-6">
           {fromHeader ? 'Autism Treatment Options' : 'Potential Treatment Options'}
@@ -45,7 +41,7 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
         {treatmentOptions.map((treatment, index) => (
           <div 
             key={index}
-            className="bg-white rounded-2xl p-6 shadow-elevation-1 border border-neutral-200 opacity-100"
+            className="bg-white rounded-2xl p-6 shadow-elevation-1 border border-neutral-200"
           >
             <h3 className="text-lg font-medium text-neutral-900 mb-2">
               {treatment.title}
@@ -68,7 +64,7 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
         ))}
       </div>
       
-      <div className={`bg-blue-light rounded-2xl p-6 border border-blue-medium/20 mb-8 ${sectionTransitionClass}`}>
+      <div className="bg-blue-light rounded-2xl p-6 border border-blue-medium/20 mb-8">
         <h3 className="text-lg font-medium text-neutral-900 mb-2">Finding Professionals</h3>
         <p className="text-neutral-800 text-sm leading-relaxed mb-4">
           To access these treatments, consider these resources for finding qualified professionals:
