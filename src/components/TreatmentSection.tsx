@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { getTreatmentOptions } from '../utils/resultCalculator';
 import { ExternalLink } from 'lucide-react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 
 interface TreatmentSectionProps {
   riskLevel: 'low' | 'medium' | 'high';
@@ -12,6 +11,7 @@ interface TreatmentSectionProps {
 
 const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const fromHeader = searchParams.get('section') === 'treatment';
   
   // Normalize the risk level to make sure it's one of the expected values
@@ -22,6 +22,16 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
   
   // Pre-calculate treatment options immediately
   const treatmentOptions = getTreatmentOptions(normalizedRiskLevel);
+  
+  const handleBackClick = () => {
+    if (fromHeader) {
+      // If coming from header, navigate directly to home page
+      navigate('/');
+    } else {
+      // Otherwise use the provided onBack function to return to results
+      onBack();
+    }
+  };
   
   return (
     <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 py-8">
@@ -91,7 +101,7 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
       
       <div className="flex justify-center">
         <Button 
-          onClick={onBack}
+          onClick={handleBackClick}
           className="bg-blue-primary hover:bg-blue-dark text-white shadow-button hover:shadow-button-hover transform hover:-translate-y-0.5 transition-all duration-250"
         >
           {fromHeader ? 'Return to Home' : 'Return to Results'}
