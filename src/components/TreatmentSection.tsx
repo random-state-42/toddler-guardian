@@ -1,10 +1,11 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { usePageTransition, useSectionTransition, useStaggeredEntrance } from '../utils/animations';
+import { usePageTransition, useSectionTransition } from '../utils/animations';
 import { getTreatmentOptions } from '../utils/resultCalculator';
 import { ExternalLink } from 'lucide-react';
 import { useSearchParams } from 'react-router-dom';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface TreatmentSectionProps {
   riskLevel: 'low' | 'medium' | 'high';
@@ -23,8 +24,8 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
     : (riskLevel?.toLowerCase() === 'high' ? 'high' : 
        riskLevel?.toLowerCase() === 'medium' ? 'medium' : 'low')) as 'low' | 'medium' | 'high';
   
+  // Pre-calculate treatment options immediately without staggered animation delay
   const treatmentOptions = getTreatmentOptions(normalizedRiskLevel);
-  const { isItemVisible } = useStaggeredEntrance(treatmentOptions, 100);
   
   return (
     <div className={`w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 ${pageTransitionClass}`}>
@@ -44,11 +45,7 @@ const TreatmentSection = ({ riskLevel, onBack }: TreatmentSectionProps) => {
         {treatmentOptions.map((treatment, index) => (
           <div 
             key={index}
-            className={`bg-white rounded-2xl p-6 shadow-elevation-1 border border-neutral-200 transition-all duration-450 ease-in-out-expo ${
-              isItemVisible(index) 
-                ? 'opacity-100 transform translate-y-0' 
-                : 'opacity-0 transform translate-y-4'
-            }`}
+            className="bg-white rounded-2xl p-6 shadow-elevation-1 border border-neutral-200 opacity-100"
           >
             <h3 className="text-lg font-medium text-neutral-900 mb-2">
               {treatment.title}

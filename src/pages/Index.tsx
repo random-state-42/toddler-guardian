@@ -37,7 +37,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   
-  // Check URL parameters on initial load
+  // Check URL parameters on initial load and set up initial state
   useEffect(() => {
     const sectionParam = searchParams.get('section');
     if (sectionParam === 'treatment') {
@@ -59,6 +59,16 @@ const Index = () => {
     }
   }, [searchParams, result]);
   
+  // Helper function to convert risk level to expected format
+  const normalizeRiskLevel = (level: string): 'low' | 'medium' | 'high' => {
+    const lowerLevel = level.toLowerCase();
+    if (lowerLevel === 'low') return 'low';
+    if (lowerLevel === 'medium') return 'medium'; 
+    if (lowerLevel === 'high') return 'high';
+    return 'low'; // Default to low if unknown
+  };
+  
+  // Event handlers
   const handleStartQuestionnaire = () => {
     setCurrentSection('questionnaire');
     // Scroll to top when starting questionnaire
@@ -133,15 +143,6 @@ const Index = () => {
     setCurrentSection('results');
     // Scroll to top when going back to results
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-  
-  // Helper function to convert risk level to expected format
-  const normalizeRiskLevel = (level: string): 'low' | 'medium' | 'high' => {
-    const lowerLevel = level.toLowerCase();
-    if (lowerLevel === 'low') return 'low';
-    if (lowerLevel === 'medium') return 'medium'; 
-    if (lowerLevel === 'high') return 'high';
-    return 'low'; // Default to low if unknown
   };
   
   return (
