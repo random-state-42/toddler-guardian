@@ -20,6 +20,9 @@ const Header = () => {
           <Link to="/team" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
             Team
           </Link>
+          <Link to="/about" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
+            About
+          </Link>
           <Link to="/?section=treatment" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
             Treatments
           </Link>
