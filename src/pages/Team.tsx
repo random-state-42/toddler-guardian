@@ -4,7 +4,7 @@ import Header from '../components/layout/Header';
 import Footer from '../components/layout/Footer';
 import { useSectionTransition } from '../utils/animations';
 
-const About = () => {
+const Team = () => {
   const { sectionTransitionClass } = useSectionTransition(200);
 
   return (
@@ -15,7 +15,7 @@ const About = () => {
         <div className={`max-w-3xl mx-auto px-4 py-16 ${sectionTransitionClass}`}>
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-display font-medium text-blue-dark mb-4">
-              About <span className="text-blue-primary">Our Team</span>
+              Our <span className="text-blue-primary">Team</span>
             </h1>
             <div className="w-20 h-1 bg-blue-primary mx-auto rounded-full mb-6"></div>
             <p className="text-neutral-700 mb-12">
@@ -47,4 +47,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default Team;

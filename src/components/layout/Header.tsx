@@ -17,8 +17,8 @@ const Header = () => {
         </div>
         
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/about" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
-            About
+          <Link to="/team" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
+            Team
           </Link>
           <Link to="/?section=treatment" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
             Treatments
