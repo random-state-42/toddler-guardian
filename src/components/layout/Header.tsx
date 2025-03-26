@@ -1,32 +1,42 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useSectionTransition } from '../../utils/animations';
+import { Menu, X } from 'lucide-react';
 
 const Header = () => {
-  const { sectionTransitionClass } = useSectionTransition(100);
-  
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <header className={`w-full py-6 px-4 sm:px-6 ${sectionTransitionClass}`}>
-      <div className="container max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex items-center space-x-1">
-          <Link to="/" className="text-xl font-display font-medium text-blue-dark">
-            <span className="text-blue-primary">Toddler</span>Guardian
-          </Link>
-          <div className="chip bg-blue-light text-blue-dark text-xs">Beta</div>
-        </div>
+    <header className="bg-primary py-4 sticky top-0 z-50">
+      <div className="container mx-auto flex items-center justify-between">
+        <Link to="/" className="flex items-center">
+          <h1 className="text-white text-xl font-bold">ToddlerGuardian</h1>
+        </Link>
         
-        <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/team" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
-            Team
-          </Link>
-          <Link to="/about" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
-            About
-          </Link>
-          <Link to="/?section=treatment" className="text-neutral-800 hover:text-blue-primary button-transition text-sm">
-            Treatments
-          </Link>
+        <nav className="hidden md:flex gap-6">
+          <Link to="/" className="text-white hover:text-primary-foreground transition">Home</Link>
+          <Link to="/about" className="text-white hover:text-primary-foreground transition">About</Link>
+          <Link to="/team" className="text-white hover:text-primary-foreground transition">Team</Link>
+          <Link to="/srs" className="text-white hover:text-primary-foreground transition">SRS Document</Link>
         </nav>
+        
+        {/* Mobile menu button */}
+        <button onClick={toggleMobileMenu} className="md:hidden text-white">
+          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </button>
+
+        {/* Mobile menu */}
+        <div className={`md:hidden absolute top-full left-0 w-full bg-primary ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+          <nav className="flex flex-col items-center py-4 gap-4">
+            <Link to="/" className="text-white hover:text-primary-foreground transition">Home</Link>
+            <Link to="/about" className="text-white hover:text-primary-foreground transition">About</Link>
+            <Link to="/team" className="text-white hover:text-primary-foreground transition">Team</Link>
+            <Link to="/srs" className="text-white hover:text-primary-foreground transition">SRS Document</Link>
+          </nav>
+        </div>
       </div>
     </header>
   );
